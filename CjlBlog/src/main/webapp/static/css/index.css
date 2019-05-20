@@ -50,9 +50,3 @@ a.curPage { color: #19585d; font-weight: bold; }
 .picinfo h3 { border-bottom: #ccc 1px solid; padding: 20px 0; margin: 0 20px }
 .picinfo span { padding: 20px; display: block; color: #666 }
 .picbox ul li a:hover{ color:#19585d}
-
-
-@media screen and (max-device-width: 800px) {
-	.tianqi{display:none;}
-	.music{display:none;}
-}

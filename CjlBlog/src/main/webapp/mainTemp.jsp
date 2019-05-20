@@ -33,7 +33,7 @@
 	<jsp:include page="/foreground/common/head.jsp" />
 	<div class="music" style="z-index:100;position: absolute;left: 941px;top: 72px;">
 		<div id="skPlayer"></div>
-		    <script src="../../static/js/skPlayer.min.js"></script>
+		    <script src="/static/js/skPlayer.min.js"></script>
 		    <script>
 		        var player = new skPlayer({
 		            autoplay: false,

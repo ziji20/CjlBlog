@@ -9,7 +9,6 @@
 	  	<div class="tianqi">
 		 	<!--<iframe style="float: right;margin: auto;" width="420" scrolling="no" height="60" frameborder="0" allowtransparency="true" src="http://i.tianqi.com/index.php?c=code&id=12&icon=1&num=5"></iframe>
 		 	-->
-		 	
 		</div>
 	  </div>
 	  <nav id="nav" style="clear:both;padding-top: 10px;">
