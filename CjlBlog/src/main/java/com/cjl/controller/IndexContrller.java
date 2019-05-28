@@ -26,6 +26,7 @@ import com.cjl.entity.Blog;
 import com.cjl.entity.Blogger;
 import com.cjl.entity.PageBean;
 import com.cjl.service.BlogService;
+import com.cjl.util.GetIdtoAddress;
 import com.cjl.util.PageUtil;
 import com.cjl.util.SendEmail;
 import com.cjl.util.StringUtil;
@@ -114,18 +115,22 @@ public class IndexContrller {
 		return mav;
 	}
 
-	public void VisitNameId(final String email, final String id, final String time) {
+	public void VisitNameId(final String email, final String id, final String time) throws Exception {
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 			public void run() {
+				//发送邮箱类	
 				SendEmail SendEmail = new SendEmail();
-				String text = id + "一分钟前访问了你的主页,时间是：" + time;
+				//根据id获取地理
+				GetIdtoAddress getAddress = new GetIdtoAddress();
+				String text;
 				try {
+					text = id+"一分钟前在"+getAddress.getAddressByIp(id)+ "访问了你的主页,时间是：" + time;
 					SendEmail.SendEmailFicationCode(email, text);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-		}, 60000);
+		}, 1000);
 	}
 }

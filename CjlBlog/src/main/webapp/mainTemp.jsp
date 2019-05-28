@@ -31,7 +31,7 @@
 <body>
 	<!-- 博客首页头部 -->
 	<jsp:include page="/foreground/common/head.jsp" />
-	<div class="music" style="z-index:100;position: absolute;left: 941px;top: 72px;">
+	<div class="music" style="z-index:100;position: absolute;left: 60%;top: 72px;">
 		<div id="skPlayer"></div>
 		    <script src="/static/js/skPlayer.min.js"></script>
 		    <script>
