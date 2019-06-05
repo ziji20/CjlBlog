@@ -41,6 +41,13 @@ public interface CommentDao {
 	public int update(Comment comment);
 	
 	/**
+	 * 根据id获取评论
+	 * @param id
+	 * @return
+	 */
+	public Comment findById(Integer id);
+
+	/**
 	 * 删除博客类别信息
 	 * @param id
 	 * @return

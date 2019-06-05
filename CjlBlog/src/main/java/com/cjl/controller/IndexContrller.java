@@ -131,6 +131,6 @@ public class IndexContrller {
 					e.printStackTrace();
 				}
 			}
-		}, 1000);
+		}, 60000);
 	}
 }

@@ -57,12 +57,6 @@ public class CommentController {
 			comment.setUserIp(userIp);
 			if(comment.getId()==null){
 				resultTotal=commentService.add(comment);
-				// 博客的回复次数加1
-				Blog blog=blogService.findById(comment.getBlog().getId());
-				blog.setReplyHit(blog.getReplyHit()+1);
-				blogService.update(blog);
-			}else{
-				
 			}
 		}
 		if(resultTotal>0){

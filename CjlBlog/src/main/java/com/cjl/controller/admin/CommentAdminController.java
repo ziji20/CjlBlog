@@ -11,8 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.cjl.entity.Blog;
 import com.cjl.entity.Comment;
 import com.cjl.entity.PageBean;
+import com.cjl.service.BlogService;
 import com.cjl.service.CommentService;
 import com.cjl.util.ResponseUtil;
 
@@ -31,6 +33,9 @@ public class CommentAdminController {
 
 	@Resource
 	private CommentService commentService;
+	
+	@Resource
+	private BlogService blogService;
 	
 	/**
 	 * 分页查询评论信息
@@ -76,6 +81,12 @@ public class CommentAdminController {
 			comment.setId(Integer.parseInt(idsStr[i]));
 			comment.setState(state);
 			commentService.update(comment);
+			if (state == 1) {
+				// 博客的回复次数加1
+				Blog blog= commentService.findById(Integer.parseInt(idsStr[i])).getBlog();
+				blog.setReplyHit(blog.getReplyHit()+1);
+				blogService.update(blog);
+			}
 		}
 		JSONObject result=new JSONObject();
 		result.put("success", true);
@@ -95,7 +106,14 @@ public class CommentAdminController {
 		String []idsStr=ids.split(",");
 		JSONObject result=new JSONObject();
 		for(int i=0;i<idsStr.length;i++){
-			commentService.delete(Integer.parseInt(idsStr[i]));				
+			Comment comment = commentService.findById(Integer.parseInt(idsStr[i]));
+			if (comment.getState() == 1) {
+				// 博客的回复次数减1
+				Blog blog= comment.getBlog();
+				blog.setReplyHit(blog.getReplyHit()-1);
+				blogService.update(blog);
+			}
+			commentService.delete(Integer.parseInt(idsStr[i]));	
 		}
 		result.put("success", true);
 		ResponseUtil.write(response, result);
