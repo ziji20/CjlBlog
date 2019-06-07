@@ -3,19 +3,24 @@ package com.cjl.controller.admin;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.cglib.transform.impl.AddInitTransformer;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
+import com.cjl.entity.AccessInformation;
 import com.cjl.entity.Blog;
 import com.cjl.entity.Blogger;
 import com.cjl.entity.PageBean;
@@ -23,7 +28,9 @@ import com.cjl.lucene.BlogIndex;
 import com.cjl.service.BlogService;
 import com.cjl.service.BloggerService;
 import com.cjl.util.CryptographyUtil;
+import com.cjl.util.GetIdtoAddress;
 import com.cjl.util.ResponseUtil;
+import com.cjl.util.SendEmail;
 import com.cjl.util.StringUtil;
 import com.cjl.util.ObtainPictureName;
 
@@ -194,7 +201,7 @@ public class BlogAdminController {
 
 	/**
 	 * 删除博客时清理图片
-	 * 
+	 * 刷新内存
 	 * @param response
 	 * @return
 	 */
@@ -275,5 +282,86 @@ public class BlogAdminController {
 				file.setFind(true);
 			}
 		}
+	}
+	
+	
+	/**
+	 * 分页查询访问者信息
+	 * @param page
+	 * @param rows
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("getAccessinFormationList")
+	public String getAccessinFormationList(@RequestParam(value = "page", required = false) String page,
+			@RequestParam(value = "rows", required = false) String rows,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ServletContext application = RequestContextUtils.getWebApplicationContext(request).getServletContext();
+		Map<String, AccessInformation> vnipMap= (Map<String, AccessInformation>) application.getAttribute("vnipMap");
+		Collection<AccessInformation> valueCollection = vnipMap.values();
+		List<AccessInformation> vnidList= new ArrayList<AccessInformation>(valueCollection);//map转list
+		Long total=(long) vnidList.size();
+		JSONObject result=new JSONObject();
+		JSONArray jsonArray=JSONArray.fromObject(vnidList);
+		result.put("rows", jsonArray);
+		result.put("total", total);
+		ResponseUtil.write(response, result);
+		return null;
+	}
+	
+	/**
+	 * 删除访问者信息
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("deleteAccessInformation")
+	public String deleteAccessInformation(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ServletContext application = RequestContextUtils.getWebApplicationContext(request).getServletContext();
+		application.removeAttribute("vnipMap");
+		Map<String, AccessInformation> vnipMap = new HashMap<String, AccessInformation>();
+		application.setAttribute("vnipMap", vnipMap);
+		JSONObject result = new JSONObject();
+		result.put("success", true);
+		ResponseUtil.write(response, result);
+		return null;
+	}
+	
+	/**
+	 * 发送访问量到邮箱
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping("getVNItoEmail")
+	public String getVNItoEmail(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ServletContext application = RequestContextUtils.getWebApplicationContext(request).getServletContext();
+		Map<String, AccessInformation> vnipMap= (Map<String, AccessInformation>) application.getAttribute("vnipMap");
+		JSONObject result = new JSONObject();
+		if(vnipMap.size() == 0) {
+			result.put("success", false);
+			result.put("error", "没有游客访问!");
+			ResponseUtil.write(response, result);
+			return null;
+		}
+		StringBuffer text = new StringBuffer();
+		for(String key : vnipMap.keySet()) {
+			AccessInformation ai = vnipMap.get(key);
+			text.append("访问 id:"+key+";访问次数:"+ai.getCount()+";访问时间:"+ai.getTime()+";访问地址:"+ai.getAddress()+"<br>");
+		}
+		Blogger blogger = (Blogger) application.getAttribute("blogger");
+		SendEmail SendEmail = new SendEmail();
+		try {
+			SendEmail.SendEmailFicationCode(blogger.getEmail(), text.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		result.put("success", true);
+		ResponseUtil.write(response, result);
+		return null;
 	}
 }

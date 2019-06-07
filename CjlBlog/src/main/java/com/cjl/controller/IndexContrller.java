@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
+import com.cjl.entity.AccessInformation;
 import com.cjl.entity.Blog;
 import com.cjl.entity.Blogger;
 import com.cjl.entity.PageBean;
@@ -49,6 +50,7 @@ public class IndexContrller {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/index")
 	public ModelAndView index(@RequestParam(value = "page", required = false) String page,
 			@RequestParam(value = "typeId", required = false) String typeId,
@@ -93,7 +95,24 @@ public class IndexContrller {
 		mav.setViewName("mainTemp");
 		
 		final ServletContext application = RequestContextUtils.getWebApplicationContext(request).getServletContext();
-	    String userIp = request.getRemoteAddr();
+		String userIp = getIpAddr(request);
+		Map<String, AccessInformation> vnipMap=new HashMap<String, AccessInformation>();
+		if ((application.getAttribute("vnipMap")!= null)) {
+			vnipMap= (Map<String, AccessInformation>) application.getAttribute("vnipMap");
+		}
+		if (vnipMap.containsKey(userIp)) {
+			AccessInformation accessInformation = vnipMap.get(userIp);
+			accessInformation.setCount(accessInformation.getCount()+1);
+			vnipMap.put(userIp, accessInformation);
+		}else {
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			GetIdtoAddress getAddress = new GetIdtoAddress();
+			String addres = getAddress.getAddressByIp(userIp);
+			AccessInformation accessInformation = new AccessInformation(userIp,df.format(new Date()),addres,1);
+			vnipMap.put(userIp, accessInformation);
+		}
+		application.setAttribute("vnipMap", vnipMap);
+		/*
 	    if ((application.getAttribute("vnid") == null) || (!application.getAttribute("vnid").equals(userIp)))
 	    {
 	      application.setAttribute("vnid", userIp);
@@ -110,11 +129,24 @@ public class IndexContrller {
 	          }
 	        }
 	      }, 600000);
-	    }
+	    }*/
 	    
 		return mav;
 	}
 
+	public String getIpAddr(HttpServletRequest request)  {
+        String ip  =  request.getHeader( " x-forwarded-for " );
+         if (ip  ==   null   ||  ip.length()  ==   0   ||   " unknown " .equalsIgnoreCase(ip))  {
+            ip  =  request.getHeader( " Proxy-Client-IP " );
+        } 
+         if (ip  ==   null   ||  ip.length()  ==   0   ||   " unknown " .equalsIgnoreCase(ip))  {
+            ip  =  request.getHeader( " WL-Proxy-Client-IP " );
+        } 
+         if (ip  ==   null   ||  ip.length()  ==   0   ||   " unknown " .equalsIgnoreCase(ip))  {
+           ip  =  request.getRemoteAddr();
+       } 
+        return  ip;
+   }
 	public void VisitNameId(final String email, final String id, final String time) throws Exception {
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
