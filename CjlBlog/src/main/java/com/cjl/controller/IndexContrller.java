@@ -112,28 +112,8 @@ public class IndexContrller {
 			vnipMap.put(userIp, accessInformation);
 		}
 		application.setAttribute("vnipMap", vnipMap);
-		/*
-	    if ((application.getAttribute("vnid") == null) || (!application.getAttribute("vnid").equals(userIp)))
-	    {
-	      application.setAttribute("vnid", userIp);
-	      Blogger blogger = (Blogger)application.getAttribute("blogger");
-	      SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	      VisitNameId(blogger.getEmail(), userIp, df.format(new Date()));
-	      Timer timer = new Timer();
-	      timer.schedule(new TimerTask()
-	      {
-	        public void run()
-	        {
-	          if (application.getAttribute("vnid") != null) {
-	            application.removeAttribute("vnid");
-	          }
-	        }
-	      }, 600000);
-	    }*/
-	    
 		return mav;
 	}
-
 	public String getIpAddr(HttpServletRequest request)  {
         String ip  =  request.getHeader( " x-forwarded-for " );
          if (ip  ==   null   ||  ip.length()  ==   0   ||   " unknown " .equalsIgnoreCase(ip))  {
@@ -147,22 +127,4 @@ public class IndexContrller {
        } 
         return  ip;
    }
-	public void VisitNameId(final String email, final String id, final String time) throws Exception {
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-			public void run() {
-				//发送邮箱类	
-				SendEmail SendEmail = new SendEmail();
-				//根据id获取地理
-				GetIdtoAddress getAddress = new GetIdtoAddress();
-				String text;
-				try {
-					text = id+"一分钟前在"+getAddress.getAddressByIp(id)+ "访问了你的主页,时间是：" + time;
-					SendEmail.SendEmailFicationCode(email, text);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}, 60000);
-	}
 }

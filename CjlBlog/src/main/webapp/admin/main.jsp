@@ -126,7 +126,7 @@
 				<a href="${pageContext.request.contextPath}/index.html" id="go-home" target="_blank"><img alt="logo" src="${pageContext.request.contextPath}/static/images/logo.png"></a>
 			</td>
 			<td valign="bottom" align="right" width="50%">
-				<font size="3">&nbsp;&nbsp;<strong>欢迎：</strong>${currentUser.userName }</font>
+				<font size="3">&nbsp;&nbsp;<strong></strong>${blogger.userName }</font>
 			</td>
 		</tr>
 	</table>
@@ -144,7 +144,7 @@
 			<a href="javascript:openTab('写博客','writeBlog.jsp','icon-writeblog')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-writeblog'" style="width: 150px">写博客</a>
 			<a href="javascript:openTab('评论审核','commentReview.jsp','icon-review	')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-review'" style="width: 150px">评论审核</a>
 			<a href="javascript:openTab('留言管理','LeavingMessageManage.jsp','icon-review')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-review'" style="width: 150px">留言管理</a>
-			<a href="javascript:openTab('访问管理','AccessInformation.jsp','icon-grxx')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-grxx'" style="width: 150px">留言管理</a>
+			<a href="javascript:openTab('访问管理','AccessInformation.jsp','icon-grxx')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-grxx'" style="width: 150px">访问管理</a>
 			
 		</div>
 		<div title="博客管理"  data-options="iconCls:'icon-bkgl'" style="padding:10px;">

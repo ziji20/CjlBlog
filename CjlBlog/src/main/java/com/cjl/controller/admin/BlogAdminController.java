@@ -286,7 +286,7 @@ public class BlogAdminController {
 	
 	
 	/**
-	 * 分页查询访问者信息
+	 * 查询访问者信息
 	 * @param page
 	 * @param rows
 	 * @param request
@@ -299,9 +299,14 @@ public class BlogAdminController {
 			@RequestParam(value = "rows", required = false) String rows,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ServletContext application = RequestContextUtils.getWebApplicationContext(request).getServletContext();
 		Map<String, AccessInformation> vnipMap= (Map<String, AccessInformation>) application.getAttribute("vnipMap");
-		Collection<AccessInformation> valueCollection = vnipMap.values();
-		List<AccessInformation> vnidList= new ArrayList<AccessInformation>(valueCollection);//map转list
-		Long total=(long) vnidList.size();
+		Collection<AccessInformation> valueCollection = null;
+		List<AccessInformation> vnidList = null;
+		Long total = null;
+		if (vnipMap !=  null) {
+			valueCollection = vnipMap.values();
+			vnidList= new ArrayList<AccessInformation>(valueCollection);//map转list
+			total=(long) vnidList.size();
+		}
 		JSONObject result=new JSONObject();
 		JSONArray jsonArray=JSONArray.fromObject(vnidList);
 		result.put("rows", jsonArray);
@@ -351,10 +356,11 @@ public class BlogAdminController {
 		StringBuffer text = new StringBuffer();
 		for(String key : vnipMap.keySet()) {
 			AccessInformation ai = vnipMap.get(key);
-			text.append("访问 id:"+key+";访问次数:"+ai.getCount()+";访问时间:"+ai.getTime()+";访问地址:"+ai.getAddress()+"<br>");
+			text.append("访问 id:"+key+";访问次数:"+ai.getCount()+";访问时间:"+ai.getTime()+";访问地址:"+ai.getAddress()+"\n");
 		}
 		Blogger blogger = (Blogger) application.getAttribute("blogger");
 		SendEmail SendEmail = new SendEmail();
+			System.out.println(text.toString());
 		try {
 			SendEmail.SendEmailFicationCode(blogger.getEmail(), text.toString());
 		} catch (Exception e) {
