@@ -3,6 +3,7 @@ package com.cjl.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -96,7 +97,7 @@ public class IndexContrller {
 		
 		final ServletContext application = RequestContextUtils.getWebApplicationContext(request).getServletContext();
 		String userIp = getIpAddr(request);
-		Map<String, AccessInformation> vnipMap=new HashMap<String, AccessInformation>();
+		Map<String, AccessInformation> vnipMap=new LinkedHashMap<String, AccessInformation>();
 		if ((application.getAttribute("vnipMap")!= null)) {
 			vnipMap= (Map<String, AccessInformation>) application.getAttribute("vnipMap");
 		}

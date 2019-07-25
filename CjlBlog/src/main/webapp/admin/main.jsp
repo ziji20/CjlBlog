@@ -103,9 +103,9 @@
 		if(confirm("确定刷新内存")){
 			$.post("${pageContext.request.contextPath}/admin/blog/clearPicture.do",{},function(result){
 				if(result.success){
-					$.messager.alert("系统提示","已成功刷新全文检索！");
+					$.messager.alert("系统提示","已成功刷新内存！");
 				}else{
-					$.messager.alert("系统提示","刷新全文检索失败！");
+					$.messager.alert("系统提示","刷新内存失败！");
 				}
 			},"json");
 		}

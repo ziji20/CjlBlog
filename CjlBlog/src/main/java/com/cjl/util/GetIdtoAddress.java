@@ -149,18 +149,21 @@ public class GetIdtoAddress {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+		 String address = null;
 		JSONObject json = JSONObject.fromObject(json_result);
-		String country = JSONObject.fromObject(json.get("data")).get("country").toString();//国家
-		String region = JSONObject.fromObject(json.get("data")).get("region").toString();//省份
-		String city = JSONObject.fromObject(json.get("data")).get("city").toString();//城市
-		String county = JSONObject.fromObject(json.get("data")).get("county").toString();//区/省
-		String isp = JSONObject.fromObject(json.get("data")).get("isp").toString();//互联网服务提供商
-		String area = JSONObject.fromObject(json.get("data")).get("area").toString();//地区
-		
-		String address = country;
-		address += region + "省";
-		address += city + "市";
-		address += county+ "区";
+		if ((json != null) || (json.get("data") != null)) {
+	      String country = JSONObject.fromObject(json.get("data")).get("country").toString();
+	      String region = JSONObject.fromObject(json.get("data")).get("region").toString();
+	      String city = JSONObject.fromObject(json.get("data")).get("city").toString();
+	      String county = JSONObject.fromObject(json.get("data")).get("county").toString();
+	      String isp = JSONObject.fromObject(json.get("data")).get("isp").toString();
+	      String area = JSONObject.fromObject(json.get("data")).get("area").toString();
+	      address = country;
+	      address = address + region + "省";
+	      address = address + city + "市";
+	   }else{
+	      address = "未知的ip地区";
+	   }
 		return address;
 	}
 }
