@@ -58,7 +58,7 @@ public class BlogController {
 		map.put("state", 1);
 		mav.addObject("commentList", commentService.list(map));
 		mav.addObject("pageCode", this.getUpAndDownPageCode(blogService.getLastBlog(id), blogService.getNextBlog(id), request.getServletContext().getContextPath()));
-		mav.addObject("pageTitle", blog.getTitle()+"×Ï¼«20²©¿Í");
+		mav.addObject("pageTitle", blog.getTitle()+"×Ï¼«20");
 		mav.addObject("mainPage", "foreground/blog/view.jsp");
 		mav.setViewName("mainTemp");
 		return mav;

@@ -1,6 +1,4 @@
 package com.cjl.util;
-
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,161 +7,164 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.junit.Test;
+
 import net.sf.json.JSONObject;
-
-
 /**
- * ¸ù¾İid»ñÈ¡µØÀí¹¤¾ßÀà
+ * æ ¹æ®idè·å–åœ°ç†å·¥å…·ç±»
  * @author hasee
  *
  */
 public class GetIdtoAddress {
 
-	public static String getAddresses(String content, String encodingString)
-			throws UnsupportedEncodingException {
-		// ÕâÀïµ÷ÓÃÌÔ±¦API
-		String urlStr = "http://ip.taobao.com/service/getIpInfo.php";
-		// ´Óhttp://whois.pconline.com.cnÈ¡µÃIPËùÔÚµÄÊ¡ÊĞÇøĞÅÏ¢
-		String returnStr = getResult(urlStr, content, encodingString);
-		if (returnStr != null) {
-			// ´¦Àí·µ»ØµÄÊ¡ÊĞÇøĞÅÏ¢
-			returnStr = decodeUnicode(returnStr);
-			String[] temp = returnStr.split(",");
-			if(temp.length<3){
-				return "0";//ÎŞĞ§IP£¬¾ÖÓòÍø²âÊÔ
-			}
-			return returnStr;
-		}
-		return null;
-	}
+	public static String getAddresses(String content, String encodingString)throws UnsupportedEncodingException {
+		String urlStr = "http://ip.taobao.com/service/getIpInfo.php";  
+        // ä»http://whois.pconline.com.cnå–å¾—IPæ‰€åœ¨çš„çœå¸‚åŒºä¿¡æ¯  
+        String returnStr = getResult(urlStr, content, encodingString);  
+        if (returnStr != null) {  
+            // å¤„ç†è¿”å›çš„çœå¸‚åŒºä¿¡æ¯  
+            returnStr = decodeUnicode(returnStr);  
+            String[] temp = returnStr.split(",");  
+            if(temp.length<3){  
+                return "0";//æ— æ•ˆIPï¼Œå±€åŸŸç½‘æµ‹è¯•  
+            }  
+            return returnStr;  
+        }  
+        return null;  
+    }
 	
-	private static String getResult(String urlStr, String content, String encoding) {
-		URL url = null;
-		HttpURLConnection connection = null;
-		try {
-			url = new URL(urlStr);
-			connection = (HttpURLConnection) url.openConnection();// ĞÂ½¨Á¬½ÓÊµÀı
-			connection.setConnectTimeout(2000);// ÉèÖÃÁ¬½Ó³¬Ê±Ê±¼ä£¬µ¥Î»ºÁÃë
-			connection.setReadTimeout(2000);// ÉèÖÃ¶ÁÈ¡Êı¾İ³¬Ê±Ê±¼ä£¬µ¥Î»ºÁÃë
-			connection.setDoOutput(true);// ÊÇ·ñ´ò¿ªÊä³öÁ÷ true|false
-			connection.setDoInput(true);// ÊÇ·ñ´ò¿ªÊäÈëÁ÷true|false
-			connection.setRequestMethod("POST");// Ìá½»·½·¨POST|GET
-			connection.setUseCaches(false);// ÊÇ·ñ»º´ætrue|false
-			connection.connect();// ´ò¿ªÁ¬½Ó¶Ë¿Ú
-			DataOutputStream out = new DataOutputStream(connection
-					.getOutputStream());// ´ò¿ªÊä³öÁ÷Íù¶Ô¶Ë·şÎñÆ÷Ğ´Êı¾İ
-			out.writeBytes(content);// Ğ´Êı¾İ,Ò²¾ÍÊÇÌá½»ÄãµÄ±íµ¥ name=xxx&pwd=xxx
-			out.flush();// Ë¢ĞÂ
-			out.close();// ¹Ø±ÕÊä³öÁ÷
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					connection.getInputStream(), encoding));// Íù¶Ô¶ËĞ´ÍêÊı¾İ¶Ô¶Ë·şÎñÆ÷·µ»ØÊı¾İ
-			// ,ÒÔBufferedReaderÁ÷À´¶ÁÈ¡
-			StringBuffer buffer = new StringBuffer();
-			String line = "";
-			while ((line = reader.readLine()) != null) {
-				buffer.append(line);
-			}
-			reader.close();
-			return buffer.toString();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (connection != null) {
-				connection.disconnect();// ¹Ø±ÕÁ¬½Ó
-			}
-		}
-		return null;
+	private static String getResult(String urlStr, String content, String encoding) {  
+        URL url = null;  
+        HttpURLConnection connection = null;  
+        try {  
+            url = new URL(urlStr);  
+            connection = (HttpURLConnection) url.openConnection();// æ–°å»ºè¿æ¥å®ä¾‹  
+            connection.setConnectTimeout(2000);// è®¾ç½®è¿æ¥è¶…æ—¶æ—¶é—´ï¼Œå•ä½æ¯«ç§’  
+            connection.setReadTimeout(2000);// è®¾ç½®è¯»å–æ•°æ®è¶…æ—¶æ—¶é—´ï¼Œå•ä½æ¯«ç§’  
+            connection.setDoOutput(true);// æ˜¯å¦æ‰“å¼€è¾“å‡ºæµ true|false  
+            connection.setDoInput(true);// æ˜¯å¦æ‰“å¼€è¾“å…¥æµtrue|false  
+            connection.setRequestMethod("POST");// æäº¤æ–¹æ³•POST|GET  
+            connection.setUseCaches(false);// æ˜¯å¦ç¼“å­˜true|false  
+            connection.connect();// æ‰“å¼€è¿æ¥ç«¯å£  
+            DataOutputStream out = new DataOutputStream(connection  
+                    .getOutputStream());// æ‰“å¼€è¾“å‡ºæµå¾€å¯¹ç«¯æœåŠ¡å™¨å†™æ•°æ®  
+            out.writeBytes(content);// å†™æ•°æ®,ä¹Ÿå°±æ˜¯æäº¤ä½ çš„è¡¨å• name=xxx&pwd=xxx  
+            out.flush();// åˆ·æ–°  
+            out.close();// å…³é—­è¾“å‡ºæµ  
+            BufferedReader reader = new BufferedReader(new InputStreamReader(  
+                    connection.getInputStream(), encoding));// å¾€å¯¹ç«¯å†™å®Œæ•°æ®å¯¹ç«¯æœåŠ¡å™¨è¿”å›æ•°æ®  
+            // ,ä»¥BufferedReaderæµæ¥è¯»å–  
+            StringBuffer buffer = new StringBuffer();  
+            String line = "";  
+            while ((line = reader.readLine()) != null) {  
+                buffer.append(line);  
+            }  
+            reader.close();  
+            return buffer.toString();  
+        } catch (IOException e) {  
+            e.printStackTrace();  
+        } finally {  
+            if (connection != null) {  
+                connection.disconnect();// å…³é—­è¿æ¥  
+            }  
+        }  
+        return null;  
+    }  
+	public static String decodeUnicode(String theString) {  
+	    char aChar;  
+	    int len = theString.length();  
+	    StringBuffer outBuffer = new StringBuffer(len);  
+	    for (int x = 0; x < len;) {  
+	        aChar = theString.charAt(x++);  
+	        if (aChar == '\\') {  
+	            aChar = theString.charAt(x++);  
+	            if (aChar == 'u') {  
+	                int value = 0;  
+	                for (int i = 0; i < 4; i++) {  
+	                    aChar = theString.charAt(x++);  
+	                    switch (aChar) {  
+	                    case '0':  
+	                    case '1':  
+	                    case '2':  
+	                    case '3':  
+	                    case '4':  
+	                    case '5':  
+	                    case '6':  
+	                    case '7':  
+	                    case '8':  
+	                    case '9':  
+	                        value = (value << 4) + aChar - '0';  
+	                        break;  
+	                    case 'a':  
+	                    case 'b':  
+	                    case 'c':  
+	                    case 'd':  
+	                    case 'e':  
+	                    case 'f':  
+	                        value = (value << 4) + 10 + aChar - 'a';  
+	                        break;  
+	                    case 'A':  
+	                    case 'B':  
+	                    case 'C':  
+	                    case 'D':  
+	                    case 'E':  
+	                    case 'F':  
+	                        value = (value << 4) + 10 + aChar - 'A';  
+	                        break;  
+	                    default:  
+	                        throw new IllegalArgumentException(  
+	                                "Malformed      encoding.");  
+	                    }  
+	                }  
+	                outBuffer.append((char) value);  
+	            } else {  
+	                if (aChar == 't') {  
+	                    aChar = '\t';  
+	                } else if (aChar == 'r') {  
+	                    aChar = '\r';  
+	                } else if (aChar == 'n') {  
+	                    aChar = '\n';  
+	                } else if (aChar == 'f') {  
+	                    aChar = '\f';  
+	                }  
+	                outBuffer.append(aChar);  
+	            }  
+	        } else {  
+	            outBuffer.append(aChar);  
+	        }  
+	    }  
+	    return outBuffer.toString();  
 	}
 
-	public static String decodeUnicode(String theString) {
-		char aChar;
-		int len = theString.length();
-		StringBuffer outBuffer = new StringBuffer(len);
-		for (int x = 0; x < len;) {
-			aChar = theString.charAt(x++);
-			if (aChar == '\\') {
-				aChar = theString.charAt(x++);
-				if (aChar == 'u') {
-					int value = 0;
-					for (int i = 0; i < 4; i++) {
-						aChar = theString.charAt(x++);
-						switch (aChar) {
-						case '0':
-						case '1':
-						case '2':
-						case '3':
-						case '4':
-						case '5':
-						case '6':
-						case '7':
-						case '8':
-						case '9':
-							value = (value << 4) + aChar - '0';
-							break;
-						case 'a':
-						case 'b':
-						case 'c':
-						case 'd':
-						case 'e':
-						case 'f':
-							value = (value << 4) + 10 + aChar - 'a';
-							break;
-						case 'A':
-						case 'B':
-						case 'C':
-						case 'D':
-						case 'E':
-						case 'F':
-							value = (value << 4) + 10 + aChar - 'A';
-							break;
-						default:
-							throw new IllegalArgumentException(
-									"Malformed      encoding.");
-						}
-					}
-					outBuffer.append((char) value);
-				} else {
-					if (aChar == 't') {
-						aChar = '\t';
-					} else if (aChar == 'r') {
-						aChar = '\r';
-					} else if (aChar == 'n') {
-						aChar = '\n';
-					} else if (aChar == 'f') {
-						aChar = '\f';
-					}
-					outBuffer.append(aChar);
-				}
-			} else {
-				outBuffer.append(aChar);
-			}
+	public static String getAddressByIp(String ip) {
+	    // å‚æ•°ip  
+	    // json_resultç”¨äºæ¥æ”¶è¿”å›çš„jsonæ•°æ®  
+		if (ip.equals("0:0:0:0:0:0:0:1")) {
+			return "å†…ç½‘æµ‹è¯•";
 		}
-		return outBuffer.toString();
+	    String json_result = null;  
+	    try {  
+	        json_result = GetIdtoAddress.getAddresses("ip=" + ip, "utf-8");  
+	    } catch (UnsupportedEncodingException e) {  
+	        e.printStackTrace();  
+	    }  
+	    JSONObject json = JSONObject.fromObject(json_result);  
+	   // System.out.println("jsonæ•°æ®ï¼š " + json);  
+	    String address = "";
+		String region = JSONObject.fromObject(json.get("data")).get("region").toString();  
+		String city = JSONObject.fromObject(json.get("data")).get("city").toString();  
+		String isp = JSONObject.fromObject(json.get("data")).get("isp").toString();  
+		System.out.println("çœä»½: " + region);  
+		System.out.println("åŸå¸‚ï¼š " + city);  
+		System.out.println("äº’è”ç½‘æœåŠ¡æä¾›å•†ï¼š " + isp);  
+		  
+		address += region + "/";  
+		address += city + "/";  
+		address += isp + "/";  
+		System.out.println(address); 
+	   return address;
 	}
-	
-	public String getAddressByIp(String ip) throws Exception {
-		// json_resultÓÃÓÚ½ÓÊÕ·µ»ØµÄjsonÊı¾İ
-		String json_result = null;
-		try {
-			json_result = GetIdtoAddress.getAddresses("ip=" + ip, "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		 String address = null;
-		JSONObject json = JSONObject.fromObject(json_result);
-		if ((json != null) || (json.get("data") != null)) {
-	      String country = JSONObject.fromObject(json.get("data")).get("country").toString();
-	      String region = JSONObject.fromObject(json.get("data")).get("region").toString();
-	      String city = JSONObject.fromObject(json.get("data")).get("city").toString();
-	      String county = JSONObject.fromObject(json.get("data")).get("county").toString();
-	      String isp = JSONObject.fromObject(json.get("data")).get("isp").toString();
-	      String area = JSONObject.fromObject(json.get("data")).get("area").toString();
-	      address = country;
-	      address = address + region + "Ê¡";
-	      address = address + city + "ÊĞ";
-	   }else{
-	      address = "Î´ÖªµÄipµØÇø";
-	   }
-		return address;
+	public static void main(String[] args) {
+			System.out.println(getAddressByIp("127.0.0.1"));
 	}
 }

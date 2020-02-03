@@ -14,7 +14,7 @@
 	
 	function deleteInformation(){
 		if(confirm("确定删除所有访问者信息？")){
-			$.post("${pageContext.request.contextPath}/admin/blog/deleteAccessInformation.do",{},function(result){
+			$.post("${pageContext.request.contextPath}/admin/system/deleteAccessInformation.do",{},function(result){
 				if(result.success){
 					$.messager.alert("系统提示","已删除！");
 				}else{
@@ -26,7 +26,7 @@
 	}
 	function getvnInformation(){
 		if(confirm("确定发送访问量到邮箱？")){
-			$.post("${pageContext.request.contextPath}/admin/blog/getVNItoEmail.do",{},function(result){
+			$.post("${pageContext.request.contextPath}/admin/system/getVNItoEmail.do",{},function(result){
 				if(result.success){
 					$.messager.alert("系统提示","已发送！");
 				}else{
@@ -40,7 +40,7 @@
 <body style="margin: 1px">
 <table id="dg" title="评论管理" class="easyui-datagrid" 
   fitColumns="true" pagination="true" rownumbers="true"
-  url="${pageContext.request.contextPath}/admin/blog/getAccessinFormationList.do" fit="true" toolbar="#tb">
+  url="${pageContext.request.contextPath}/admin/system/getAccessinFormationList.do" fit="true" toolbar="#tb">
   <thead>
   	<tr>
   		<th field="id" width="50" align="center">访问ip</th>

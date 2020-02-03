@@ -91,7 +91,7 @@ public class IndexContrller {
 		}
 		mav.addObject("pageCode", PageUtil.genPagination(request.getContextPath() + "/index.html",
 				blogService.getTotal(map), Integer.parseInt(page), 10, param.toString()));
-		mav.addObject("pageTitle", "×Ï¼«20²©¿Í");
+		mav.addObject("pageTitle", "My growth");
 		mav.addObject("mainPage", "foreground/blog/list.jsp");
 		mav.setViewName("mainTemp");
 		
@@ -101,13 +101,16 @@ public class IndexContrller {
 		if ((application.getAttribute("vnipMap")!= null)) {
 			vnipMap= (Map<String, AccessInformation>) application.getAttribute("vnipMap");
 		}
+		GetIdtoAddress getAddress = new GetIdtoAddress();
 		if (vnipMap.containsKey(userIp)) {
 			AccessInformation accessInformation = vnipMap.get(userIp);
 			accessInformation.setCount(accessInformation.getCount()+1);
+			if (accessInformation.getAddress() == null) {
+				accessInformation.setAddress(getAddress.getAddressByIp(userIp));
+			}
 			vnipMap.put(userIp, accessInformation);
 		}else {
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			GetIdtoAddress getAddress = new GetIdtoAddress();
 			String addres = getAddress.getAddressByIp(userIp);
 			AccessInformation accessInformation = new AccessInformation(userIp,df.format(new Date()),addres,1);
 			vnipMap.put(userIp, accessInformation);
