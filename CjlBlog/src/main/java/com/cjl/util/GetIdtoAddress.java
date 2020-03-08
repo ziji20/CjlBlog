@@ -136,32 +136,34 @@ public class GetIdtoAddress {
 	    return outBuffer.toString();  
 	}
 
+	/**
+	 * 获取地址ip
+	 * @param ip
+	 * @return
+	 */
 	public static String getAddressByIp(String ip) {
 	    // 参数ip  
 	    // json_result用于接收返回的json数据  
 		if (ip.equals("0:0:0:0:0:0:0:1")) {
-			return "内网测试";
+//			return "内网测试";
 		}
 	    String json_result = null;  
+	    JSONObject json = null;
+	    String address = "";
 	    try {  
 	        json_result = GetIdtoAddress.getAddresses("ip=" + ip, "utf-8");  
+	        json = JSONObject.fromObject(json_result);
+	        String region = JSONObject.fromObject(json.get("data")).get("region").toString();  
+			String city = JSONObject.fromObject(json.get("data")).get("city").toString();  
+			String isp = JSONObject.fromObject(json.get("data")).get("isp").toString();  	
+			address += region + "/";  
+			address += city + "/";  
+			address += isp + "/";
 	    } catch (UnsupportedEncodingException e) {  
 	        e.printStackTrace();  
-	    }  
-	    JSONObject json = JSONObject.fromObject(json_result);  
-	   // System.out.println("json数据： " + json);  
-	    String address = "";
-		String region = JSONObject.fromObject(json.get("data")).get("region").toString();  
-		String city = JSONObject.fromObject(json.get("data")).get("city").toString();  
-		String isp = JSONObject.fromObject(json.get("data")).get("isp").toString();  
-		System.out.println("省份: " + region);  
-		System.out.println("城市： " + city);  
-		System.out.println("互联网服务提供商： " + isp);  
-		  
-		address += region + "/";  
-		address += city + "/";  
-		address += isp + "/";  
-		System.out.println(address); 
+	        return "地址api错误";
+	    }    
+	 
 	   return address;
 	}
 	public static void main(String[] args) {
