@@ -95,23 +95,29 @@ public class IndexContrller {
 		mav.addObject("mainPage", "foreground/blog/list.jsp");
 		mav.setViewName("mainTemp");
 		
-		final ServletContext application = RequestContextUtils.getWebApplicationContext(request).getServletContext();
+		ServletContext application=RequestContextUtils.getWebApplicationContext(request).getServletContext();
 		String userIp = getIpAddr(request);
 		Map<String, AccessInformation> vnipMap=new LinkedHashMap<String, AccessInformation>();
 		if ((application.getAttribute("vnipMap")!= null)) {
 			vnipMap= (Map<String, AccessInformation>) application.getAttribute("vnipMap");
 		}
 		GetIdtoAddress getAddress = new GetIdtoAddress();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		if (vnipMap.containsKey(userIp)) {
 			AccessInformation accessInformation = vnipMap.get(userIp);
 			accessInformation.setCount(accessInformation.getCount()+1);
+			accessInformation.setTime(df.format(new Date()));
 			if (accessInformation.getAddress() == null) {
 				accessInformation.setAddress(getAddress.getAddressByIp(userIp));
 			}
 			vnipMap.put(userIp, accessInformation);
 		}else {
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String addres = getAddress.getAddressByIp(userIp);
+			String addres = null;
+			try {
+				addres = getAddress.getAddressByIp(userIp);
+			} catch (Exception e) {
+				addres = "´íÎó!";
+			}
 			AccessInformation accessInformation = new AccessInformation(userIp,df.format(new Date()),addres,1);
 			vnipMap.put(userIp, accessInformation);
 		}

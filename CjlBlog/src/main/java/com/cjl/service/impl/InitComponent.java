@@ -1,6 +1,8 @@
 package com.cjl.service.impl;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -11,6 +13,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+import com.cjl.entity.AccessInformation;
 import com.cjl.entity.Blog;
 import com.cjl.entity.BlogType;
 import com.cjl.entity.Blogger;
@@ -45,6 +48,9 @@ public class InitComponent implements ServletContextListener,ApplicationContextA
 		BlogService blogService=(BlogService) applicationContext.getBean("blogService");
 		List<Blog> blogCountList=blogService.countList(); // 根据日期分组查询博客
 		application.setAttribute("blogCountList", blogCountList);
+		
+		Map<String, AccessInformation> vnipMap=new LinkedHashMap<String, AccessInformation>();
+		application.setAttribute("vnipMap", vnipMap);
 		
 	}
 
