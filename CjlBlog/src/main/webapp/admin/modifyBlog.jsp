@@ -11,11 +11,11 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/jquery-easyui-1.3.3/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/jquery-easyui-1.3.3/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/jquery-easyui-1.3.3/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/static/js/My97DatePicker_date/WdatePicker.js"></script> 
 
 <script type="text/javascript" charset="gbk" src="${pageContext.request.contextPath}/static/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" charset="gbk" src="${pageContext.request.contextPath}/static/ueditor/ueditor.all.min.js"> </script>
 <script type="text/javascript" charset="gbk" src="${pageContext.request.contextPath}/static/ueditor/lang/zh-cn/zh-cn.js"></script>
-
 <script type="text/javascript">
 	
 	function submitData(){
@@ -23,6 +23,8 @@
 		var blogTypeId=$("#blogTypeId").combobox("getValue")
 		var content=UE.getEditor('editor').getContent()
 		var keyWord=$("#keyWord").val();
+		var setDate=$("#setDate").val();
+		var clickHit=$("#clickHit").val();
 		
 		if(title==null || title==''){
 			alert("请输入标题！");
@@ -32,8 +34,9 @@
 			alert("请填写内容！");
 		}else{
 			$.post("${pageContext.request.contextPath}/admin/blog/save.do",{'id':'${param.id}','title':title,'blogType.id':blogTypeId,
-				'contentNoTag':UE.getEditor('editor').getContentTxt(),
-				'content':content,'summary':UE.getEditor('editor').getContentTxt().substr(0,155),'keyWord':keyWord},function(result){
+				'contentNoTag':UE.getEditor('editor').getContentTxt(),'content':content,
+				'summary':UE.getEditor('editor').getContentTxt().substr(0,155),'keyWord':keyWord,
+				'clickHit':clickHit,'setDate':setDate},function(result){
 				if(result.success){
 					alert("博客修改成功！");
 					window.parent.tabsClose();
@@ -48,7 +51,6 @@
 </script>
 </head>
 <body style="margin: 10px">
-
 <div id="p" class="easyui-panel" title="修改博客" style="padding: 10px">
 	<table cellspacing="20px">
 		<tr>
@@ -87,9 +89,21 @@
 			</td>
 		</tr>
 		<tr>
+			<td>分布时间：</td>
+			<td>
+				<input type="text" id="setDate" name="setDate" onclick="WdatePicker({el:this,dateFmt:'yyyy-MM-dd HH:mm:ss'})" style="width: 200px"/>&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td>阅读次数：</td>
+			<td>
+				<input type="text" id="clickHit" name="clickHit" style="width: 200px"/>&nbsp;
+			</td>
+		</tr>
+		<tr>
 			<td></td>
 			<td>
-				<a href="javascript:submitData()" class="easyui-linkbutton" data-options="iconCls:'icon-submit'">发布博客</a>
+				<a href="javascript:submitData()" class="easyui-linkbutton" data-options="iconCls:'icon-submit'">修改博客</a>
 			</td>
 		</tr>
 	</table>
@@ -111,6 +125,8 @@
     					$("#title").val(result.title);
     					$("#summary").val(result.summary);
     					$("#keyWord").val(result.keyWord);
+    					$("#clickHit").val(result.clickHit);
+    					$("#setDate").val(result.setDate);
     					$("#blogTypeId").combobox("setValue",result.blogType.id);
     					UE.getEditor('editor').setContent(result.content);
     				}

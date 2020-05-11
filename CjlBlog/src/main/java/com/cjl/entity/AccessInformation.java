@@ -7,10 +7,10 @@ package com.cjl.entity;
  */
 public class AccessInformation {
 
-	private String id;
-	private String time;
-	private String address;
-	private Integer count;
+	private String id;//id
+	private String time;//时间
+	private String address;//地址
+	private Integer count;//次数
 	
 	public AccessInformation() {} 
 	public AccessInformation(String id, String time, String address, Integer count) {

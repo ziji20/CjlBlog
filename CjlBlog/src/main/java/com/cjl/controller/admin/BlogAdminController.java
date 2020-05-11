@@ -1,7 +1,9 @@
 package com.cjl.controller.admin;
 
 import java.io.File;
+import java.util.Date;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -77,6 +79,8 @@ public class BlogAdminController {
 			}
 			blogIndex.addIndex(blog);
 		} else {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			blog.setReleaseDate(sdf.parse(blog.getSetDate()));
 			resultTotal = blogService.update(blog);
 			blogIndex.updateIndex(blog);
 		}
@@ -168,6 +172,8 @@ public class BlogAdminController {
 	@RequestMapping("/findById")
 	public String findById(@RequestParam(value = "id") String id, HttpServletResponse response) throws Exception {
 		Blog blog = blogService.findById(Integer.parseInt(id));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		blog.setSetDate(sdf.format(blog.getReleaseDate()));
 		JSONObject result = JSONObject.fromObject(blog);
 		ResponseUtil.write(response, result);
 		return null;

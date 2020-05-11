@@ -107,7 +107,7 @@ public class IndexContrller {
 			AccessInformation accessInformation = vnipMap.get(userIp);
 			accessInformation.setCount(accessInformation.getCount()+1);
 			accessInformation.setTime(df.format(new Date()));
-			if (accessInformation.getAddress() == null) {
+			if (accessInformation.getAddress().equals("true")) {
 				accessInformation.setAddress(getAddress.getAddressByIp(userIp));
 			}
 			vnipMap.put(userIp, accessInformation);

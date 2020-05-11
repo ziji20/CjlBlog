@@ -167,7 +167,7 @@ public class GetIdtoAddress {
 			address += city + "/";
 			address += isp + "/";
 		} catch (Exception e) {
-			return "api地址拼接失败";
+			return "true";
 		}
 
 		return address;

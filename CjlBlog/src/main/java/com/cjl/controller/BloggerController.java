@@ -50,7 +50,6 @@ public class BloggerController {
 			subject.login(token); // 登录验证
  			return "redirect:/admin/main.jsp";
 		}catch(Exception e){
-			e.printStackTrace();
 			request.setAttribute("blogger", blogger);
 			request.setAttribute("errorInfo", "用户名或密码错误！");
 			return "login";

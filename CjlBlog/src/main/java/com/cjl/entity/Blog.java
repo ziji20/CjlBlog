@@ -15,6 +15,7 @@ public class Blog {
 	private String title; // 博客标题
 	private String summary; // 摘要
 	private Date releaseDate; // 发布日期
+	private String setDate;
 	private Integer clickHit; // 查看次数
 	private Integer replyHit; // 回复次数
 	private String content; // 博客内容
@@ -44,6 +45,12 @@ public class Blog {
 		this.content = content;
 		this.blogType = blogType;
 		this.keyWord = keyWord;
+	}
+	public String getSetDate() {
+		return setDate;
+	}
+	public void setSetDate(String setDate) {
+		this.setDate = setDate;
 	}
 	public Integer getId() {
 		return id;

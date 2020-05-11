@@ -74,10 +74,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="blogType.id!=null">
 				typeId=#{blogType.id},
 			</if>
-			<if test="clickHit!=null">
+			<if test="clickHit!=null and clickHit!=''">
 				clickHit=#{clickHit},
 			</if>
-			<if test="replyHit!=null">
+			<if test="releaseDate!=null">
+				releaseDate=#{releaseDate},
+			</if>
+			<if test="replyHit!=null and replyHit!=''">
 				replyHit=#{replyHit},
 			</if>
 			<if test="keyWord!=null and keyWord!=''">
