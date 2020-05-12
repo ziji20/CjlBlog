@@ -33,7 +33,8 @@
 	<jsp:include page="/foreground/common/head.jsp" />
 	<div class="music" style="z-index:100;position: absolute;left: 60%;top: 72px;">
 		<div id="skPlayer"></div>
-		   <!--  <script src="/static/js/skPlayer.min.js"></script>
+			<!--拉取网易云音乐  -->
+		   <!-- <script src="/static/js/skPlayer.min.js"></script>
 		    <script>
 		        var player = new skPlayer({
 		            autoplay: false,
@@ -44,8 +45,9 @@
 		                source: 2687686046
 		            }
 		        });
-		    </script> -->
-		   <iframe src="http://music.163.com/outchain/player?type=0&amp;id=2687686046&amp;auto=1&amp;height=430;&amp;" width="100%" height="450" frameborder="no" marginwidth="0" marginheight="0"></iframe> 
+		    </script>  -->
+		    <!-- 拉取QQ音乐 -->
+		    <jsp:include page="/foreground/common/music.jsp" />
 	</div>
 	<!-- 主体 -->
 	<article>
