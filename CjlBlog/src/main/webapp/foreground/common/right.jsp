@@ -13,7 +13,7 @@
     }
 } */
 </script>
-<div class="l_box" id="l_box" style="float:right;"><!-- width:300px;position: fixed;top:19.2%; right: 10%; -->
+<div class="l_box" id="l_box" style="float:right;width:300px"><!-- ; -->
    	<div class="about_me">
     	<h2>关于我</h2>
      	<ul>
