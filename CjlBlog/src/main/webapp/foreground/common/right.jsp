@@ -26,34 +26,36 @@
 				
       	</ul>
 	</div>
-    <div class="search">
-      <form action="${pageContext.request.contextPath}/blog/q.html" method="post" onsubmit="return checkData()" name="searchform" id="searchform">
-        <input name="q" id="q" class="input_text" value="${q }"  placeholder="请输入要查询的关键字..." type="text">
-        <input name="Submit" class="input_submit" value="搜索" type="submit">
-      </form>
-    </div>
-    <div class="fenlei">
-      <h2>文章分类</h2>
-      <ul>
-      	<c:forEach var="blogTypeCount" items="${blogTypeCountList }">
-			<li><span><a href="${pageContext.request.contextPath}/index.html?typeId=${blogTypeCount.id}">${blogTypeCount.typeName }(${blogTypeCount.blogCount })</a></span></li>
-		</c:forEach>
-      </ul>
-    </div>
-    <div class="timefenlei">
-      <h2>日期分类</h2>
-      <ul>
-      	<c:forEach var="blogCount" items="${blogCountList }">
-			<li><span><a href="${pageContext.request.contextPath}/index.html?releaseDateStr=${blogCount.releaseDateStr}">${blogCount.releaseDateStr }(${blogCount.blogCount })</a></span></li>
-		</c:forEach>
-      </ul>
-    </div>
-    <div class="links">
-      <h2>友情链接</h2>
-      <ul>
-		<c:forEach var="link" items="${linkList }">
-			<a href="${link.linkUrl }" target="_blank">${link.linkName }</a>
-		</c:forEach>
-	   </ul>
+	<div id="suspension">
+	    <div class="search">
+	      <form action="${pageContext.request.contextPath}/blog/q.html" method="post" onsubmit="return checkData()" name="searchform" id="searchform">
+	        <input name="q" id="q" class="input_text" value="${q }"  placeholder="请输入要查询的关键字..." type="text">
+	        <input name="Submit" class="input_submit" value="搜索" type="submit">
+	      </form>
+	    </div>
+	    <div class="fenlei">
+	      <h2>文章分类</h2>
+	      <ul>
+	      	<c:forEach var="blogTypeCount" items="${blogTypeCountList }">
+				<li><span><a href="${pageContext.request.contextPath}/index.html?typeId=${blogTypeCount.id}">${blogTypeCount.typeName }(${blogTypeCount.blogCount })</a></span></li>
+			</c:forEach>
+	      </ul>
+	    </div>
+	    <div class="timefenlei">
+	      <h2>日期分类</h2>
+	      <ul>
+	      	<c:forEach var="blogCount" items="${blogCountList }">
+				<li><span><a href="${pageContext.request.contextPath}/index.html?releaseDateStr=${blogCount.releaseDateStr}">${blogCount.releaseDateStr }(${blogCount.blogCount })</a></span></li>
+			</c:forEach>
+	      </ul>
+	    </div>
+	    <div class="links">
+	      <h2>友情链接</h2>
+	      <ul>
+			<c:forEach var="link" items="${linkList }">
+				<a href="${link.linkUrl }" target="_blank">${link.linkName }</a>
+			</c:forEach>
+		   </ul>
+		</div>
 	</div>
 </div>
