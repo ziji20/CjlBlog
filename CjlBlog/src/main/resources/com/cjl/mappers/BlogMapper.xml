@@ -12,13 +12,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="clickHit" column="clickHit"/>
 		<result property="replyHit" column="replyHit"/>
 		<result property="content" column="content"/>
+		<result property="privateBlog" column="privateBlog"/>
 		<result property="keyWord" column="keyWord"/>
 		
 		<association property="blogType" column="typeId" select="com.cjl.dao.BlogTypeDao.findById"></association>
 	</resultMap>
 	
 	<select id="countList" resultMap="BlogResult">
-		SELECT DATE_FORMAT(releaseDate,'%Y年%m月') AS releaseDateStr,COUNT(*) AS blogCount  FROM t_blog GROUP BY DATE_FORMAT(releaseDate,'%Y年%m月') ORDER BY  DATE_FORMAT(releaseDate,'%Y年%m月') DESC;
+		SELECT DATE_FORMAT(releaseDate,'%Y年%m月') AS releaseDateStr,COUNT(*) AS blogCount  FROM t_blog WHERE privateBlog = 0 GROUP BY DATE_FORMAT(releaseDate,'%Y年%m月') ORDER BY  DATE_FORMAT(releaseDate,'%Y年%m月') DESC;
 	</select>
 	
 	<select id="list" parameterType="Map" resultMap="BlogResult">
@@ -32,6 +33,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>
 			<if test="releaseDateStr!=null and releaseDateStr!='' ">
 				and DATE_FORMAT(releaseDate,'%Y年%m月')=#{releaseDateStr}
+			</if>
+			<if test="privateBlog!=null and privateBlog!='' ">
+				and privateBlog=0
 			</if>
 		</where>
 		order by releaseDate desc
@@ -51,6 +55,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>
 			<if test="releaseDateStr!=null and releaseDateStr!='' ">
 				and DATE_FORMAT(releaseDate,'%Y年%m月')=#{releaseDateStr}
+			</if>
+			<if test="privateBlog!=null and privateBlog!='' ">
+				and privateBlog=0
 			</if>
 		</where>
 	</select>
@@ -86,20 +93,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="keyWord!=null and keyWord!=''">
 				keyWord=#{keyWord},
 			</if>
+			<if test="privateBlog!=null and privateBlog!='' ">
+				and privateBlog=#{privateBlog}
+			</if>
 		</set>
 		where id=#{id}
 	</update>
 	
 	<select id="getLastBlog" parameterType="Integer" resultMap="BlogResult">
-		SELECT * FROM t_blog WHERE id&lt;#{id} ORDER BY id DESC LIMIT 1;
+		SELECT * FROM t_blog WHERE id&lt;#{id} and privateBlog = 0 ORDER BY id DESC LIMIT 1;
 	</select>
 	
 	<select id="getNextBlog" parameterType="Integer" resultMap="BlogResult">
-		SELECT * FROM t_blog WHERE id&gt;#{id} ORDER BY id ASC LIMIT 1;
+		SELECT * FROM t_blog WHERE id&gt;#{id} and privateBlog = 0 ORDER BY id ASC LIMIT 1;
 	</select>
 	
 	<insert id="add" useGeneratedKeys="true" keyProperty="id"  parameterType="Blog" >
-		insert into t_blog values(null,#{title},#{summary},now(),0,0,#{content},#{blogType.id},#{keyWord})
+		insert into t_blog values(null,#{title},#{summary},now(),0,0,#{content},#{blogType.id},#{keyWord},#{privateBlog})
 	</insert>
 	
 	<delete id="delete" parameterType="Integer">
@@ -107,6 +117,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</delete>
 	
 	<select id="getBlogByTypeId" parameterType="Integer" resultType="Integer">
-		select count(*) from t_blog where typeId=#{typeId}
+		select count(*) from t_blog where typeId=#{typeId} and privateBlog = 0
 	</select>
 </mapper> 

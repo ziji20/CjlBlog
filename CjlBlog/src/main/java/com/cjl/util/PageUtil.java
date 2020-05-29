@@ -13,6 +13,7 @@ public class PageUtil {
 	 * @param totalNum 总记录数
 	 * @param currentPage 当前页
 	 * @param pageSize 每页大小
+	 * @param param  页面的数据
 	 * @return
 	 */
 	public static String genPagination(String targetUrl,long totalNum,int currentPage,int pageSize,String param){
