@@ -95,18 +95,6 @@ public class BlogAdminController {
 		return null;
 	}
 
-	public String save(Blog blog) throws Exception {
-		int resultTotal = 0;
-		resultTotal = blogService.add(blog);
-		blogIndex.addIndex(blog);
-		JSONObject result = new JSONObject();
-		if (resultTotal > 0) {
-			result.put("success", true);
-		} else {
-			result.put("success", false);
-		}
-		return null;
-	}
 
 	/**
 	 * 分页查询博客信息

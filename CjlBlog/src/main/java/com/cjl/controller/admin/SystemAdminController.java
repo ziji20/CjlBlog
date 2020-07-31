@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
@@ -31,6 +33,7 @@ import com.cjl.service.BlogService;
 import com.cjl.service.BlogTypeService;
 import com.cjl.service.BloggerService;
 import com.cjl.service.LinkService;
+import com.cjl.util.GetApplicationContext;
 import com.cjl.util.ObtainPictureName;
 import com.cjl.util.ResponseUtil;
 import com.cjl.util.SendEmail;
@@ -289,6 +292,50 @@ public class SystemAdminController {
 		}
 		result.put("success", true);
 		ResponseUtil.write(response, result);
+		return null;
+	}
+	/**
+	 * 获取博客访问的权限
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/getAuthorityValue")
+	public String getAuthorityValue(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String privateBlog =GetApplicationContext.getAPPlicationValue("privateBlog",request);
+		JSONObject result = new JSONObject();
+		result.put("success", privateBlog);
+		ResponseUtil.write(response, result);
+		return null;
+	}
+	/**
+	 * 修改博客的访问权限
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/updateAuthority")
+	public String updateAuthority(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		final ServletContext application=RequestContextUtils.getWebApplicationContext(request).getServletContext();
+		String privateBlog = GetApplicationContext.getAPPlicationValue("privateBlog",request);
+		if (privateBlog== null) {
+			privateBlog = "0";
+		}
+		privateBlog = privateBlog.equals("0") ? "1":"0";
+		application.setAttribute("privateBlog", privateBlog);
+		JSONObject result = new JSONObject();
+		result.put("success", true);
+		ResponseUtil.write(response, result);
+		
+		//设置定时器五分钟后关闭权限
+		Timer timer = new Timer();
+		      timer.schedule(new TimerTask() {
+		      public void run() {
+		    	  application.setAttribute("privateBlog", "0");
+		      }
+		}, 300000);// 设定指定的时间time,此处为2000毫秒
 		return null;
 	}
 }

@@ -25,18 +25,19 @@
 		var keyWord=$("#keyWord").val();
 		var setDate=$("#setDate").val();
 		var clickHit=$("#clickHit").val();
+		var privateBlog=$('input:radio[name="privateBlog"]:checked').val();
 		
 		if(title==null || title==''){
 			alert("请输入标题！");
 		}else if(blogTypeId==null || blogTypeId==''){
 			alert("请选择博客类别！");
 		}else if(content==null || content==''){
-			alert("请填写内容！");
+			alert("请填写内容！"); 
 		}else{
 			$.post("${pageContext.request.contextPath}/admin/blog/save.do",{'id':'${param.id}','title':title,'blogType.id':blogTypeId,
 				'contentNoTag':UE.getEditor('editor').getContentTxt(),'content':content,
 				'summary':UE.getEditor('editor').getContentTxt().substr(0,155),'keyWord':keyWord,
-				'clickHit':clickHit,'setDate':setDate},function(result){
+				'clickHit':clickHit,'setDate':setDate,'privateBlog':privateBlog},function(result){
 				if(result.success){
 					alert("博客修改成功！");
 					window.parent.tabsClose();
@@ -46,7 +47,6 @@
 			},"json");
 		}
 	}
-	
 
 </script>
 </head>
@@ -95,9 +95,16 @@
 			</td>
 		</tr>
 		<tr>
+			<td>是否私有：</td>
+			<td>
+				<input type="radio" id="isprivateBlog" name="privateBlog" value="1" />&nbsp;是
+				<input type="radio" id="noprivateBlog" name="privateBlog" value="0" checked="checked"/>&nbsp;否
+			</td>
+		</tr>
+		<tr>
 			<td>阅读次数：</td>
 			<td>
-				<input type="text" id="clickHit" name="clickHit" style="width: 200px"/>&nbsp;
+				<input type="text" id="clickHit" name="clickHit" style="width: 80px"/>&nbsp;
 			</td>
 		</tr>
 		<tr>
@@ -128,6 +135,10 @@
     					$("#clickHit").val(result.clickHit);
     					$("#setDate").val(result.setDate);
     					$("#blogTypeId").combobox("setValue",result.blogType.id);
+    					if(result.privateBlog==1){
+    						$("#noprivateBlog").removeAttr("checked")
+    						$("#isprivateBlog").attr("checked","checked");
+    					}
     					UE.getEditor('editor').setContent(result.content);
     				}
    			});

@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.print.Doc;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
@@ -35,6 +37,7 @@ import org.apache.lucene.store.FSDirectory;
 
 import com.cjl.entity.Blog;
 import com.cjl.util.DateUtil;
+import com.cjl.util.GetApplicationContext;
 import com.cjl.util.StringUtil;
 
 /**
@@ -71,6 +74,7 @@ public class BlogIndex {
 		doc.add(new TextField("title",blog.getTitle(),Field.Store.YES));
 		doc.add(new StringField("releaseDate",DateUtil.formatDate(new Date(), "yyyy-MM-dd"),Field.Store.YES));
 		doc.add(new TextField("content",blog.getContentNoTag(),Field.Store.YES));
+		doc.add(new TextField("privateBlog",blog.getPrivateBlog(),Field.Store.YES));
 		writer.addDocument(doc);
 		writer.close();
 	}
@@ -110,6 +114,7 @@ public class BlogIndex {
 		doc.add(new TextField("title",blog.getTitle(),Field.Store.YES));
 		doc.add(new StringField("releaseDate",DateUtil.formatDate(new Date(), "yyyy-MM-dd"),Field.Store.YES));
 		doc.add(new TextField("content",blog.getContentNoTag(),Field.Store.YES));
+		doc.add(new TextField("privateBlog",blog.getPrivateBlog(),Field.Store.YES));
 		writer.updateDocument(new Term("id",String.valueOf(blog.getId())), doc);
 		writer.close();
 	}
@@ -120,7 +125,7 @@ public class BlogIndex {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Blog> searchBlog(String q)throws Exception{
+	public List<Blog> searchBlog(String q,String privateBlog)throws Exception{
 		dir=FSDirectory.open(Paths.get("C://lucene"));
 		IndexReader reader=DirectoryReader.open(dir);
 		IndexSearcher is=new IndexSearcher(reader);
@@ -145,6 +150,12 @@ public class BlogIndex {
 		List<Blog> blogList=new LinkedList<Blog>();
 		for(ScoreDoc scoreDoc:hits.scoreDocs){
 			Document doc=is.doc(scoreDoc.doc);
+			//查询时判断是否是私人博客
+			if (!doc.get("privateBlog").equals(privateBlog)) {
+				if (!privateBlog.equals("1")) {
+					continue;
+				}
+			}
 			Blog blog=new Blog();
 			blog.setId(Integer.parseInt(doc.get("id")));
 			blog.setReleaseDateStr(doc.get("releaseDate"));

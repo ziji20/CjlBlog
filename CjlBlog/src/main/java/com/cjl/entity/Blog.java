@@ -15,11 +15,11 @@ public class Blog {
 	private String title; // 博客标题
 	private String summary; // 摘要
 	private Date releaseDate; // 发布日期
-	private String setDate;
+	private String setDate;//设置时间
 	private Integer clickHit; // 查看次数
 	private Integer replyHit; // 回复次数
 	private String content; // 博客内容
-	private Integer	privateBlog;//设置私人博客
+	private String	privateBlog;//设置私人博客 1为私人
 	private String contentNoTag; // 博客内容，无网页标签 Lucene分词用到
 	private int blogTypeId;
 	
@@ -32,15 +32,15 @@ public class Blog {
 	private List<String> imageList=new LinkedList<String>(); // 博客里存在的图片，主要用于列表展示的缩略图
 	
 	
-	public Integer getPrivateBlog() {
+	public String getPrivateBlog() {
 		return privateBlog;
 	}
-	public void setPrivateBlog(Integer privateBlog) {
+	public void setPrivateBlog(String privateBlog) {
 		this.privateBlog = privateBlog;
 	}
 	public Blog(){}
 	public Blog(Integer id, String title, String summary, Date releaseDate,
-			Integer clickHit, Integer replyHit, String content,Integer privateBlog,
+			Integer clickHit, Integer replyHit, String content,String privateBlog,
 			BlogType blogType, String keyWord) {
 		super();
 		this.id = id;

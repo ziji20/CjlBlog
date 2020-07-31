@@ -12,7 +12,6 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/jquery-easyui-1.3.3/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript">
 	var url;
-	
 	function openTab(text,url,iconCls){
 		if($("#tabs").tabs("exists",text)){
 			$("#tabs").tabs("select",text);
@@ -90,7 +89,7 @@
 	}
 	function sxqwjs(){
 		if(confirm("全文检索刷新很慢，确定刷新")){
-			$.post("${pageContext.request.contextPath}/admin/blog/sxqwjs.do",{},function(result){
+			$.post("${pageContext.request.contextPath}/admin/system/sxqwjs.do",{},function(result){
 				if(result.success){
 					$.messager.alert("系统提示","已成功刷新全文检索！");
 				}else{
@@ -100,8 +99,8 @@
 		}
 	}
 	function sxnc(){
-		if(confirm("确定刷新内存")){
-			$.post("${pageContext.request.contextPath}/admin/blog/clearPicture.do",{},function(result){
+		if(confirm("确定刷新内存")){	
+			$.post("${pageContext.request.contextPath}/admin/system/clearPicture.do",{},function(result){
 				if(result.success){
 					$.messager.alert("系统提示","已成功刷新内存！");
 				}else{
@@ -109,6 +108,19 @@
 				}
 			},"json");
 		}
+	}
+	function srqx(){
+		$.post("${pageContext.request.contextPath}/admin/system/getAuthorityValue.do",{},function(result){
+			if(confirm("权限现为" + (result.success== 1 ? 1:0) +"是否更改！")){	
+				$.post("${pageContext.request.contextPath}/admin/system/updateAuthority.do",{},function(result){
+					if(result.success){
+						$.messager.alert("系统提示","成功更改！五分钟自动关闭权限");
+					}else{
+						$.messager.alert("系统提示","更改失败！");
+					}
+				},"json");
+			}
+		},"json");
 	}
 	function tabsClose(){
 		var tab=$('#tabs').tabs('getSelected');//获取当前选中tabs
@@ -134,7 +146,7 @@
 <div region="center">
 	<div class="easyui-tabs" fit="true" border="false" id="tabs">
 		<div title="首页" data-options="iconCls:'icon-home'">
-			<div align="center" style="padding-top: 100px"><font color="red" size="10">欢迎使用</font></div>
+			<div align="center" style="margin-top: 1%"><jsp:include page="time.jsp" /></div>
 		</div>
 	</div>
 </div>
@@ -145,7 +157,7 @@
 			<a href="javascript:openTab('评论审核','commentReview.jsp','icon-review	')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-review'" style="width: 150px">评论审核</a>
 			<a href="javascript:openTab('留言管理','LeavingMessageManage.jsp','icon-review')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-review'" style="width: 150px">留言管理</a>
 			<a href="javascript:openTab('访问管理','AccessInformation.jsp','icon-grxx')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-grxx'" style="width: 150px">访问管理</a>
-			
+			<a href="javascript:srqx()" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-modifyPassword'" style="width: 150px">开关私人权限</a>
 		</div>
 		<div title="博客管理"  data-options="iconCls:'icon-bkgl'" style="padding:10px;">
 			<a href="javascript:openTab('写博客','writeBlog.jsp','icon-writeblog')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-writeblog'" style="width: 150px;">写博客</a>

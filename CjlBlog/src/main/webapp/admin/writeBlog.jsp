@@ -25,6 +25,7 @@
 		var blogTypeId=$("#blogTypeId").combobox("getValue")
 		var content=UE.getEditor('editor').getContent()
 		var keyWord=$("#keyWord").val();
+		var privateBlog=$('input:radio[name="privateBlog"]:checked').val();
 		
 		if(title==null || title==''){
 			alert("请输入标题！");
@@ -35,7 +36,8 @@
 		}else{
 			 $.post("${pageContext.request.contextPath}/admin/blog/save.do",{'title':title,'blogType.id':blogTypeId,
 				'contentNoTag':UE.getEditor('editor').getContentTxt(),
-				'content':content,'summary':UE.getEditor('editor').getContentTxt().substr(0,155),'keyWord':keyWord},function(result){
+				'content':content,'summary':UE.getEditor('editor').getContentTxt().substr(0,155),'keyWord':keyWord,
+				'privateBlog':privateBlog},function(result){
 				if(result.success){
 					alert("博客发布成功！");
 					resultValue();
@@ -88,6 +90,13 @@
 			<td>摘要：</td>
 			<td>
 				<textarea rows="5" cols="100" id="summary" name="summary" style="resize:none" onkeyup="this.value = this.value.substring(0,300)" placeholder="请输入，不输入默认是标题"></textarea>&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td>是否私有：</td>
+			<td>
+				<input type="radio" id="isprivateBlog" name="privateBlog" value="1" />&nbsp;是
+				<input type="radio" id="noprivateBlog" name="privateBlog" value="0" checked="checked"/>&nbsp;否
 			</td>
 		</tr>
 		<tr>

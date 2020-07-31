@@ -35,7 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				and DATE_FORMAT(releaseDate,'%Y年%m月')=#{releaseDateStr}
 			</if>
 			<if test="privateBlog!=null and privateBlog!='' ">
-				and privateBlog=0
+				and privateBlog=#{privateBlog}
 			</if>
 		</where>
 		order by releaseDate desc
@@ -93,8 +93,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="keyWord!=null and keyWord!=''">
 				keyWord=#{keyWord},
 			</if>
+			<if test="releaseDateStr!=null and releaseDateStr!=''">
+				releaseDateStr=#{releaseDateStr},
+			</if>
 			<if test="privateBlog!=null and privateBlog!='' ">
-				and privateBlog=#{privateBlog}
+				privateBlog=#{privateBlog}
 			</if>
 		</set>
 		where id=#{id}

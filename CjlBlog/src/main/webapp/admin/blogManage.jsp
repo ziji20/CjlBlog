@@ -20,6 +20,10 @@
 		return val.typeName;
 	}
 	
+	function formatBlogAuthority(val,row){
+		return row.privateBlog=="0" ? "否":"是";  
+	}
+	
 	function searchBlog(){
 		$("#dg").datagrid('load',{
 			"title":$("#s_title").val()
@@ -74,9 +78,10 @@
   		<th field="title" width="200" align="center" formatter="formatTitle">标题</th>
   		<th field="releaseDate" width="50" align="center">发布日期</th>
   		<th field="blogType" width="50" align="center" formatter="formatBlogType">博客类型</th>
+  		<th field="privateBlog" width="30" align="center" formatter="formatBlogAuthority">权限</th>
   	</tr>
   </thead>
-</table>
+</table> 
 <div id="tb">
 	<div>
 		<a href="javascript:openBlogModifyTab()" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>

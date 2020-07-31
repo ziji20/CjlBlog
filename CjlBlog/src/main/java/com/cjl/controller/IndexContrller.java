@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
@@ -25,12 +23,11 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.cjl.entity.AccessInformation;
 import com.cjl.entity.Blog;
-import com.cjl.entity.Blogger;
 import com.cjl.entity.PageBean;
 import com.cjl.service.BlogService;
+import com.cjl.util.GetApplicationContext;
 import com.cjl.util.GetIdtoAddress;
 import com.cjl.util.PageUtil;
-import com.cjl.util.SendEmail;
 import com.cjl.util.StringUtil;
 
 /**
@@ -55,22 +52,29 @@ public class IndexContrller {
 	@RequestMapping("/index")
 	public ModelAndView index(@RequestParam(value = "page", required = false) String page,
 			@RequestParam(value = "typeId", required = false) String typeId,
-			@RequestParam(value = "typeId", required = false) Integer privateBlog,
 			@RequestParam(value = "releaseDateStr", required = false) String releaseDateStr, HttpServletRequest request)
 			throws Exception {
 		ModelAndView mav = new ModelAndView();
+		ServletContext application=RequestContextUtils.getWebApplicationContext(request).getServletContext();
+		
+		//获取applicat中是否设置查看私人博客
+		String privateBlog = GetApplicationContext.getAPPlicationValue("privateBlog",request);
+		if (privateBlog== null) {
+			privateBlog = "0";
+		}
+		//获取页码
 		if (StringUtil.isEmpty(page)) {
 			page = "1";
 		}
-		if (StringUtil.isEmpty(Integer.toString(privateBlog))) {
-			privateBlog = 0;
-		}
+		//设置查询条件,查询首页的博客
 		PageBean pageBean = new PageBean(Integer.parseInt(page), 10);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("start", pageBean.getStart());
 		map.put("size", pageBean.getPageSize());
 		map.put("typeId", typeId);
-		map.put("privateBlog", privateBlog);
+		if (!privateBlog.equals("1")) {
+			map.put("privateBlog", privateBlog);
+		}
 		map.put("releaseDateStr", releaseDateStr);
 		List<Blog> blogList = blogService.list(map);
 		for (Blog blog : blogList) {
@@ -100,10 +104,11 @@ public class IndexContrller {
 		mav.addObject("mainPage", "foreground/blog/list.jsp");
 		mav.setViewName("mainTemp");
 		
-		ServletContext application=RequestContextUtils.getWebApplicationContext(request).getServletContext();
+		//获取用户访问地址
 		String userIp = getIpAddr(request);
 		Map<String, AccessInformation> vnipMap=new LinkedHashMap<String, AccessInformation>();
-		if ((application.getAttribute("vnipMap")!= null)) {
+		vnipMap=GetApplicationContext.getAPPlicationValue("vnipMap", request);
+		if (vnipMap== null) {
 			vnipMap= (Map<String, AccessInformation>) application.getAttribute("vnipMap");
 		}
 		GetIdtoAddress getAddress = new GetIdtoAddress();

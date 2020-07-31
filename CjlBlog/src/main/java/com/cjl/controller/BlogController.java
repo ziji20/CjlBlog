@@ -18,6 +18,7 @@ import com.cjl.entity.Blog;
 import com.cjl.lucene.BlogIndex;
 import com.cjl.service.BlogService;
 import com.cjl.service.CommentService;
+import com.cjl.util.GetApplicationContext;
 import com.cjl.util.StringUtil;
 
 @Controller
@@ -43,24 +44,37 @@ public class BlogController {
 	public ModelAndView details(@PathVariable("id") Integer id,HttpServletRequest request)throws Exception{
 		ModelAndView mav=new ModelAndView();
 		Blog blog=blogService.findById(id);
-		String keyWords=blog.getKeyWord();
-		if(StringUtil.isNotEmpty(keyWords)){
-			String arr[]=keyWords.split(" ");
-			mav.addObject("keyWords", StringUtil.filterWhite(Arrays.asList(arr)));
-		}else{
-			mav.addObject("keyWords",null);
+		//获取applicat中是否设置查看私人博客
+		String privateBlog = GetApplicationContext.getAPPlicationValue("privateBlog",request);
+		if (privateBlog== null) {
+			privateBlog = "0";
 		}
-		mav.addObject("blog",blog);
-		blog.setClickHit(blog.getClickHit()+1);
-		blogService.update(blog);
-		Map<String,Object> map=new HashMap<String,Object>();
-		map.put("blogId", blog.getId());
-		map.put("state", 1);
-		mav.addObject("commentList", commentService.list(map));
-		mav.addObject("pageCode", this.getUpAndDownPageCode(blogService.getLastBlog(id), blogService.getNextBlog(id), request.getServletContext().getContextPath()));
-		mav.addObject("pageTitle", blog.getTitle()+"紫极20");
-		mav.addObject("mainPage", "foreground/blog/view.jsp");
-		mav.setViewName("mainTemp");
+		//没有查询博客
+		if (blog==null) {
+			mav = new ModelAndView("redirect:/index.html");
+		}else if (privateBlog.equals("1") || blog.getPrivateBlog().equals(privateBlog) ) {
+			//是否有权限查看博客
+			String keyWords=blog.getKeyWord();
+			if(StringUtil.isNotEmpty(keyWords)){
+				String arr[]=keyWords.split(" ");
+				mav.addObject("keyWords", StringUtil.filterWhite(Arrays.asList(arr)));
+			}else{
+				mav.addObject("keyWords",null);
+			}
+			mav.addObject("blog",blog);
+			blog.setClickHit(blog.getClickHit()+1);
+			blogService.update(blog);
+			Map<String,Object> map=new HashMap<String,Object>();
+			map.put("blogId", blog.getId());
+			map.put("state", 1);
+			mav.addObject("commentList", commentService.list(map));
+			mav.addObject("pageCode", this.getUpAndDownPageCode(blogService.getLastBlog(id), blogService.getNextBlog(id), request.getServletContext().getContextPath()));
+			mav.addObject("pageTitle", blog.getTitle()+"紫极20");
+			mav.addObject("mainPage", "foreground/blog/view.jsp");
+			mav.setViewName("mainTemp");
+		}else {
+			mav = new ModelAndView("redirect:/index.html");
+		}
 		return mav;
 	}
 	
@@ -97,6 +111,10 @@ public class BlogController {
 	 */
 	@RequestMapping("/q")
 	public ModelAndView search(@RequestParam(value="q",required=false) String q,@RequestParam(value="page",required=false) String page,HttpServletRequest request)throws Exception{
+		String privateBlog = GetApplicationContext.getAPPlicationValue("privateBlog",request);
+		if (privateBlog== null) {
+			privateBlog = "0";
+		}
 		int pageSize=5;
 		if(StringUtil.isEmpty(page)){
 			page="1";
@@ -104,7 +122,7 @@ public class BlogController {
 		ModelAndView mav=new ModelAndView();
 		mav.addObject("pageTitle", "搜索关键字'"+q+"'结果页面_紫极博客系统");
 		mav.addObject("mainPage", "foreground/blog/result.jsp");
-		List<Blog> blogList=blogIndex.searchBlog(q);
+		List<Blog> blogList=blogIndex.searchBlog(q,privateBlog);
 		Integer toIndex=blogList.size()>=Integer.parseInt(page)*pageSize?Integer.parseInt(page)*pageSize:blogList.size();
 		mav.addObject("blogList", blogList.subList((Integer.parseInt(page)-1)*pageSize, toIndex));
 		mav.addObject("pageCode",this.genUpAndDownPageCode(Integer.parseInt(page), blogList.size(), q, pageSize, request.getServletContext().getContextPath()));
@@ -129,21 +147,6 @@ public class BlogController {
 		if(totalPage==0){
 			return "";
 		}else{
-			/*pageCode.append("<nav>");
-			pageCode.append("<ul class='pager'>");
-			if(page>1){
-				pageCode.append("<li><a href='"+projectContext+"/blog/q.html?page="+(page-1)+"&q="+q+"'>上一页</a></li>");
-			}else{
-				pageCode.append("<li class='disabled'><a href='#'>上一页</a></li>");
-			}
-			if(page<totalPage){
-				pageCode.append("<li><a href='"+projectContext+"/blog/q.html?page="+(page+1)+"&q="+q+"'>下一页</a></li>");
-			}else{
-				pageCode.append("<li class='disabled'><a href='#'>下一页</a></li>");
-			}
-			pageCode.append("</ul>");
-			pageCode.append("</nav>");*/
-			
 			pageCode.append("<div class='pagelist'>");
 			if(page>1){
 				pageCode.append("<a href='"+projectContext+"/blog/q.html?page="+(page-1)+"&q="+q+"' id='prev-page'>上一页</a>");
@@ -156,7 +159,6 @@ public class BlogController {
 				pageCode.append("<a href='#' class='allpage' id='next-page'>下一页</a>");
 			}
 			pageCode.append("</div>");
-			System.out.println(pageCode.toString());
 		}
 		return pageCode.toString();
 	}

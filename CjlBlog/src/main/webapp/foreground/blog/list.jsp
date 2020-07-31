@@ -7,7 +7,10 @@
 <div class="r_box" id="blog_content">
 	<c:forEach var="blog" items="${blogList }">
 		<li style="margin-bottom: 30px">
-			<h3><a href="${pageContext.request.contextPath}/blog/articles/${blog.id }.html">${blog.title }</a></h3><br/>
+			<h3><a href="${pageContext.request.contextPath}/blog/articles/${blog.id }.html">
+				${blog.title }
+				<c:if test="${blog.privateBlog==1 }">{私人}</c:if>
+			</a></h3><br/>
 			<a href="${pageContext.request.contextPath}/blog/articles/${blog.id }.html"><span class="summary">摘要: ${blog.summary }...</span></a>
 			<span class="img"> 
 			<div style="width:auto;">
